@@ -1,0 +1,473 @@
+﻿@model Application.DTOs.EmployeeDto
+@using System.IO;
+@{
+    var imagePath= "";
+    var index = 1;
+    if( @Model.ProfileImageUrl != null){
+        imagePath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", Model.ProfileImageUrl);
+    }
+   }
+    <html>
+    <head>
+        <title>Employee Profile</title>
+        <style>
+            .profile {
+                font-family: system-ui, system-ui, sans-serif;
+                color: #101010;
+                
+            }
+           /* .photo-outer
+            {
+                width: 300px;
+                height:300px;
+                border-radius:50%;
+                background-color: red;
+                position:relative;
+            }*/
+            .profile-photo {
+                border-radius: 50%;
+                width: 250px;
+                height: 250px;
+                margin:40px 0px 40px 60px;
+            }
+
+            .profile-basic-details {
+                width: 1240px;
+                height: auto;
+            }
+
+            .profile-basic-details-top {
+                align-self: center;
+                border-top-left-radius: 20px;
+                border-top-right-radius: 20px;
+            background-color: #154360;
+            }
+
+            .profile-details {
+                padding-top: 20px;
+                padding-bottom: 20px;
+                padding-left:5%;
+            }
+
+            .name {
+                color: white;
+                font-weight: 600;
+                font-size: 38px;
+            }
+
+            .category {
+                color: white;
+                font-weight: 400;
+                font-size: 32px;
+            }
+
+            .emp-id {
+                display: flex;
+                justify-content: center;
+                padding:5px;
+                width: 350px;
+                height: 80px;
+                font-weight: 400;
+                font-size: 30px;
+                background-color: #E6E6E6;
+                border-radius: 10px;
+            color: #154360;
+            }
+
+            .profile-basic-details-bottom {
+                height:90px;
+                padding-top:10px;
+                border: 1px solid;
+                border-bottom-left-radius: 20px;
+                border-bottom-right-radius: 20px;
+                background-color: snow;
+                box-shadow: 0px 3px 3px 3px rgb(173, 172, 172);
+            }
+
+            .table-data {
+                padding: 20px;
+                font-size: 26px;
+                font-weight: 600;
+            }
+
+            .answer {
+            color: #154360;
+                line-height: 5px;
+            }
+            .sub-answer {
+                font-size: 26px;
+                font-weight: 400;
+            color: #154360;
+            }
+
+            .certificates {
+                width: 100%;
+                border-radius: 20px;
+                
+            }
+            .certificate-division {
+               
+                background-color: rgba(249, 249, 250, 1);
+                min-height: calc(100% - 41px);
+                border-radius: 20px;
+            }
+        </style>
+    </head>
+    <body>
+    <div class="profile" @*style="background-color: #E6F2F9"*@>
+            <div class="profile-basic-details">
+                <div class="profile-basic-details-top">
+                    <table>
+                        <tr>
+                            <td width="20%">
+                                @*<div class="photo-outer">*@
+                            <img class="profile-photo" src="@imagePath" alt="verified" />
+                                @*</div> *@
+                            </td>
+                            <td width="80%">
+                                <table class="profile-details" width="100%" style="line-height:50px;"  >
+                                    <tr>
+                                        <td  style="text-align:left;">
+                                        <p class="name">
+                                            <span style="border-bottom:solid 5px white;"> @Model.FirstName @Model.LastName</span>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left"><p class="category">@Model.EmployeeTypeName</p></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="profile-basic-details-bottom">
+                    <table width="100%">
+                        <tr>
+
+                            <td class="table-data" style="text-align:center; " width="25%">Hours in ESGO</td>
+                            <td class="table-data answer" style="text-align:center" width="20%"> @(Math.Round(Convert.ToDecimal(Model.TotalHours))) hours</td>
+                           
+                            <td class="table-data" width="35%" style="text-align:center">
+                                @if(Model.EmployeeTypeId == 1){
+                                <p>Nursing experience in UK</p>
+                                }
+                               
+                            </td>
+                            <td class="table-data answer" style="text-align:center" width="20%">
+                            @if (Model.EmployeeTypeId == 1)
+                                {
+                                <p>@(Model.YearsOfExperience) years </p>
+                                }
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <br>
+                <br>
+                <div class="certificates">
+                    @if (Model.EmployeeTypeId == 1)
+                    {
+                        <div class="certificate-division">
+                            <table width="100%">
+                                <tr>
+                                    <td class="table-data" style="text-align: left; padding-left:8%;" width="30%">NMC pin</td>
+                                    <td class="table-data answer" style="text-align: left; " width="40%">
+                                        <table width="100%" style="text-align: left">
+                                            <tr>
+                                                <td class="table-data answer" style="line-height:35px;" align="left">
+                                                @if (Model.EmployeeTypeId == 1)
+                                                    {
+                                                    <p>@((Model.NMCPin == "" || Model.NMCPin == null) ? "NMC not added" : Model.NMCPin)</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p>NMC not added</p>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        </table>
+
+
+                                    </td>
+                                    <td class="table-data" style="color: green; text-align: center" width="30%">
+                                    @if (Model.NMCPinStatus == (byte)NMCPinStatusEnum.Approve)
+                                        {
+                                            <img src="@Model.VerifiedLogo" alt="verified" width="160" />
+                                        }
+                                        else
+                                        {
+                                            <img src="@Model.NotVerifiedLogo" alt="not verified" width="160" />
+                                        }
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    <br>
+                    <br>
+                    }
+                    <div class="certificate-division">
+                        <table width="100%">
+                            <tr>
+                                <td class="table-data" style="text-align: left ;padding-left:8%; " width="30%">DBS number</td>
+                                <td class="table-data answer" style="text-align: left;" width="40%">
+                                    <table width="100%" style="text-align: left">
+                                        <tr>
+                                            <td class="table-data answer" style="line-height:35px;" align="left">
+                                            <p>@((Model.DbsNumber == "" || Model.DbsNumber == null) ? "DBS number not added" : Model.DbsNumber)</p>
+
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </td>
+                                <td class="table-data" width="30%" style="color: green; text-align: center ">
+                                @if (Model.DbsNumberStatus == (byte)DbsNumebrStatusEnum.Approve)
+                                    {
+                                        <img src="@Model.VerifiedLogo" alt="verified" width="160" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@Model.NotVerifiedLogo" alt="not verified" width="160" />
+                                    }
+
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br>
+                    <br>
+                    <div class="certificate-division">
+                        <table width="100%">
+                            <tr>
+                                <td class="table-data" style="text-align: left; padding-left:8%;" width="30%">Covid <br />vaccination / Exemption Certificate</td>
+                                <td class="table-data answer" style="text-align: left;" width="40%">
+                                    <table width="100%" style="text-align: left">
+                                        <tr>
+
+                                            @if (false)
+                                            {
+                                                <td class="table-data answer" style="line-height:35px;color:green;" align="left">
+                                                    Vaccinated
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td class="table-data answer" style="line-height:35px;color:red;" align="left">
+                                                    Not vaccinated
+                                                </td>
+                                            }
+
+                                        </tr>
+                                        <tr>
+
+                                            <td class="table-data answer" style="line-height:35px;" align="left">
+                                            @((Model.VaccinationCertificateUrl != null || Model.VaccinationCertificateUrl != "") ? "Certificate submitted" : "Certificate not submitted")
+                                            </td>
+
+                                        </tr>
+                                    </table>
+
+
+                                </td>
+                                @* <td class="table-data" style="color: green; text-align: center" width="30%">
+                                    @if (Model.employeeDtls.IS_VACCINATION_DOC_VERIFIED == 1)
+                                    {
+                                        <img src="@Model.VerifiedLogo" alt="verified" width="160" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@Model.NotVerifiedLogo" alt="not verified" width="160" />
+                                    }
+                                </td> *@
+                            </tr>
+                        </table>
+                    </div>
+                    <br>
+                    <br>
+                    <div class="certificate-division">
+                        <table width="100%">
+                            <tr>
+                                <td class="table-data" style="text-align: left; padding-left: 8%; " width="30%">Personal<br />reference</td>
+                                <td class="table-data answer" style="text-align: left; " width="40%">
+                                    @if (Model.PersonalReference.Count() != 0)
+                                    {
+                                        <table width="100%" style="text-align: left">
+                                        @foreach (var personal in Model.PersonalReference)
+                                            {
+                                                <tr>
+
+                                                    <td class="table-data answer" style="line-height:50px;" align="left">
+                                                        @personal.Name
+                                                        <br />
+                                                        <span class="sub-answer">@personal.CharacterProfile</span>
+                                                        <br />
+                                                        <span class="sub-answer">@personal.Email</span>
+                                                        <br />
+                                                        <span class="sub-answer">@personal.PhoneNumber</span>
+                                                    </td>
+
+                                                </tr>
+
+                                            }
+                                        </table>
+                                    }
+                                    else
+                                    {
+                                        <table width="100%" style="text-align: left">
+                                            <tr>
+
+                                                <td class="table-data answer" align="left">Per.reference not added</td>
+
+                                            </tr>
+                                        </table>
+
+                                    }
+                                </td>
+                                <td class="table-data" style="color: green; text-align: center;" width="30%">
+                                @if (Model.PersonalReference.Where(x => x.Status == (byte)PersonalReferenceStatusEnum.Approve).Any())
+                                    {
+                                        <img src="@Model.VerifiedLogo" alt="verified" width="160" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@Model.NotVerifiedLogo" alt="not verified" width="160" />
+                                    }
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="certificate-division" style="overflow:unset;">
+                        <table width="100%">
+                            <tr>
+                                <td class="table-data" style="text-align: left; padding-left: 8%; " width="30%">Professional<br />reference</td>
+                                <td class="table-data answer" style="text-align: left; " width="40%">
+                                    @if (Model.ProfessionalReference.Count() != 0)
+                                    {
+                                        <table width="100%" style="text-align: left">
+                                        @foreach (var professional in Model.ProfessionalReference)
+                                            {
+                                                <tr>
+
+                                                    <td class="table-data answer" style="line-height:50px;" align="left">
+                                                        @professional.OrganizationName
+                                                        <br />
+                                                        <span class="sub-answer">@professional.CharacterDescription</span>
+                                                        <br />
+                                                        <span class="sub-answer">@professional.OrganizationEmail</span>
+                                                        <br />
+                                                        <span class="sub-answer">@professional.OrganizationPhoneNumber</span>
+                                                    </td>
+
+                                                </tr>
+                                            }
+
+                                        </table>
+                                    }
+                                    else
+                                    {
+                                        <table width="100%" style="text-align: left">
+                                            <tr>
+
+                                                <td class="table-data answer" align="left">Prof.reference not added</td>
+
+                                            </tr>
+                                        </table>
+                                    }
+                                </td>
+                                <td class="table-data" style="color: green; text-align: center;" width="30%">
+                                @if (Model.ProfessionalReference.Where(x => x.Status == (byte)ProfessionalReferenceStatusEnum.Approve).Any())
+                                    {
+                                        <img src="@Model.VerifiedLogo" alt="verified" width="160" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@Model.NotVerifiedLogo" alt="not verified" width="160" />
+                                    }
+
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    @*<br>
+        <br>
+        <div class="certificate-division" style="overflow-wrap:break-word; ">
+            <table width="100%">
+                <tr>
+                    <td class="table-data" style="text-align: left; padding-left: 8%; " width="30%">Training<br />certificates</td>
+                    <td e="2" class="table-data answer" style="text-align: left; " width="70%">
+                        @if (Model.DocumentList.Count() != 0)
+                        {
+                            <table width="100%" style="text-align: left">
+                                @foreach (var documents in Model.DocumentList)
+                                {
+                                    <tr>
+
+                                        <td class="table-data answer" width="100%" style="line-height:35px;" align="left">
+                                            @documents.DOCUMENT_NAME
+                                            <br />
+                                            <span class="sub-answer" style="color:black">expiry date:</span> <span class="sub-answer">  @documents.EXPIRY_DATE.ToString("dd MMM yyyy")</span>
+
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </table>
+                        }
+                        else
+                        {
+                            <table width="100%" style="text-align: left">
+                                <tr>
+
+                                    <td class="table-data answer" align="left">Prof.reference not added</td>
+
+                                </tr>
+                            </table>
+                        }
+                    </td>
+                </tr>
+            </table>
+        </div>*@
+                    <br>
+                    <br>
+                    <div class="certificate-division" style="overflow-x: auto;">
+
+                        <table width="100%" style="padding-bottom:10px;">
+                            <tr>
+                                <td class="table-data" style="text-align: left; padding-left: 8%; " width="30%">Previous work experience</td>
+                            </tr>
+                        @if (Model.Employements.Count() != 0)
+                            {
+                            @foreach (var experience in Model.Employements)
+                                {
+                                    <tr>
+
+                                        <td class="table-data answer" style="text-align: left; padding-left: 8%; line-height: 50px; " width="30%">@index.&nbsp;@experience.CompanyName , @experience.CompanyAddress</td>
+
+                                    </tr>
+                                    <tr>
+
+                                        <td class="table-data sub-answer" style="text-align: left; padding-left: 8%; " width="30%">@experience.StartDate.ToString("MMM yyyy") - @experience.EndDate.ToString("MMM yyyy")</td>
+                                    </tr>
+                                    index++;
+                                }
+
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td class="table-data answer" style="text-align: left; padding-left: 8%; " width="30%">No experience added</td>
+                                </tr>
+                            }
+
+
+                        </table>
+                    </div>
+                </div>
+                </div>
+        </div>
+    </body>
+</html>
